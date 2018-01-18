@@ -2,6 +2,6 @@ Hello from {{name}}
 
 <ul>
   {% for todo in todos %}
-    <li>{{todo.title}}: {{todo.test}}</li>
+    <li><a href="todos/details/{{todo.id}}">{{todo.title}}</a>: {{todo.test}}</li>
   {% endfor %}
 </ul>
