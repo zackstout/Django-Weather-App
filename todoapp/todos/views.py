@@ -3,12 +3,16 @@ from django.shortcuts import render
 # Create your views here.
 from django.http import HttpResponse
 from .models import Todo
+import requests
 
 def index(request):
+    r = requests.get('https://api.github.com/events')
     todos = Todo.objects.all()[:10]
     context = {
         'name': 'zack',
-        'todos': todos
+        'todos': todos,
+        'req': r.json(),
+
     }
     return render(request, 'index.html', context)
 

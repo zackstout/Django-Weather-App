@@ -5,3 +5,11 @@ Hello from {{name}}
     <li><a href="todos/details/{{todo.id}}">{{todo.title}}</a>: {{todo.test}}</li>
   {% endfor %}
 </ul>
+
+<!-- <p>{{req}}</p> -->
+
+<ul>
+  {% for request in req %}
+    <li>{{request.actor.avatar_url}}</li>
+  {% endfor %}
+</ul>
