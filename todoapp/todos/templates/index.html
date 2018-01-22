@@ -6,10 +6,20 @@ Hello from {{name}}
   {% endfor %}
 </ul>
 
-<!-- <p>{{req}}</p> -->
+<!-- <p>{{weather.list}}</p> -->
+
+<ul>
+  {% for w in weather.list %}
+    <li>{{w}}</li>
+    <!-- <li>{{request}}</li> -->
+  {% endfor %}
+</ul>
+
+
 
 <ul>
   {% for request in req %}
     <li>{{request.actor.avatar_url}}</li>
+    <!-- <li>{{request}}</li> -->
   {% endfor %}
 </ul>
