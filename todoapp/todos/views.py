@@ -5,12 +5,34 @@ from django.http import HttpResponse
 from .models import Todo
 import requests
 import datetime
+# from .fusioncharts import FusionCharts
+
 
 # apikey = '2c35c72f5c9e3ae5e4c914715d470ab1'
 apikey = '24203607faa5b9ea5f063794f983e08d'
 
 def index(request):
-    import matplotlib.pyplot as plt
+    # import matplotlib.pyplot as plt
+
+    data = [
+        ['a', 'b', 'c'],
+        [1, 2, 3],
+        [2, 3, 1],
+        [3, 4, 4],
+        [5, 4, 3]
+    ]
+
+    data = [
+       ['Year', 'Sales', 'Expenses', 'Items Sold', 'Net Profit'],
+       ['2004', 1000, 400, 100, 600],
+       ['2005', 1170, 460, 120, 710],
+       ['2006', 660, 1120, 50, -460],
+       ['2007', 1030, 540, 100, 490],
+       ]
+    from graphos.sources.simple import SimpleDataSource
+    from graphos.renderers.yui import LineChart
+    # from graphos.renderers.gchart import LineChart
+    chart = LineChart(SimpleDataSource(data=data))
 
     r = requests.get('https://api.github.com/events')
     req = r.json()
@@ -46,11 +68,13 @@ def index(request):
         'req': req,
         # 'req': result,
         'weather': weatherList,
+        'chart': chart,
         # 'weather': weather
         # 'res': result,
 
     }
     return render(request, 'index.html', context)
+    # return render(request, 'index.html', { 'output' : column2d.render()})
 
 def details(request, id):
     todo = Todo.objects.get(id=id)

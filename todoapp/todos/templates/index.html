@@ -2,16 +2,20 @@
 <html>
   <head>
     <meta charset="utf-8">
-    {% load static %}
+    <script src="http://yui.yahooapis.com/3.10.0/build/yui/yui-min.js"></script>
+
+    <!-- {% load static %}
    <script type="text/javascript" src="{% static "fusioncharts/fusioncharts.js" %}"></script>
-   <script type="text/javascript" src="{% static "fusioncharts/themes/fusioncharts.theme.fint.js" %}"></script>
+   <script type="text/javascript" src="{% static "fusioncharts/themes/fusioncharts.theme.fint.js" %}"></script> -->
     <title>Django Weather!</title>
   </head>
   <body>
 
-    <div id="chart1"> {{ output|safe }}
+    <!-- <div id="chart1"> {{ output|safe }}
 
-    </div>
+    </div> -->
+
+    {{chart.as_html}}
 
 Hello from {{name}}
 
