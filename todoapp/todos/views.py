@@ -4,11 +4,14 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Todo
 import requests
+import datetime
 
 # apikey = '2c35c72f5c9e3ae5e4c914715d470ab1'
 apikey = '24203607faa5b9ea5f063794f983e08d'
 
 def index(request):
+    import matplotlib.pyplot as plt
+
     r = requests.get('https://api.github.com/events')
     req = r.json()
     result = []
@@ -17,8 +20,24 @@ def index(request):
 
     # r2 = HttpResponse.get('https://api.github.com/events')
 
-    weatherurl = 'http://api.openweathermap.org/data/2.5/forecast?id=524901&APPID=%s' % (apikey)
+    weatherurl = 'http://api.openweathermap.org/data/2.5/forecast?q=%s&APPID=%s' % ('Minneapolis', apikey)
+
+    # weatherurl = 'http://api.openweathermap.org/data/2.5/weather?q=%s&APPID=%s' % ('Minneapolis', apikey)
+
+
+    # weatherurl = 'http://tile.openweathermap.org/map/%s/%s/%s/%s.png?appid=%s' % ('clouds_new', '1', '22', '33', apikey)
     weather = requests.get(weatherurl)
+
+    weatherList = weather.json()['list']
+
+    for w in weatherList:
+        # result.append(datetime.datetime.fromtimestamp(
+        #     int(w['dt'])
+        # ).strftime('%Y-%m-%d %H:%M'))
+        w['dt'] = datetime.datetime.fromtimestamp(
+            int(w['dt'])
+        ).strftime('%Y-%m-%d %H:%M')
+
 
     todos = Todo.objects.all()[:10]
     context = {
@@ -26,7 +45,9 @@ def index(request):
         'todos': todos,
         'req': req,
         # 'req': result,
-        'weather': weather.json(),
+        'weather': weatherList,
+        # 'weather': weather
+        # 'res': result,
 
     }
     return render(request, 'index.html', context)
