@@ -14,14 +14,14 @@ apikey = '24203607faa5b9ea5f063794f983e08d'
 def index(request):
     # import matplotlib.pyplot as plt
 
-    data = [
-        ['a', 'b', 'c'],
-        [1, 2, 3],
-        [2, 3, 1],
-        [3, 4, 4],
-        [5, 4, 3]
-    ]
-
+    # data = [
+    #     ['a', 'b', 'c'],
+    #     [1, 2, 3],
+    #     [2, 3, 1],
+    #     [3, 4, 4],
+    #     [5, 4, 3]
+    # ]
+    #
     data = [
        ['Year', 'Sales', 'Expenses', 'Items Sold', 'Net Profit'],
        ['2004', 1000, 400, 100, 600],
@@ -30,9 +30,9 @@ def index(request):
        ['2007', 1030, 540, 100, 490],
        ]
     from graphos.sources.simple import SimpleDataSource
-    from graphos.renderers.yui import LineChart
-    # from graphos.renderers.gchart import LineChart
-    chart = LineChart(SimpleDataSource(data=data))
+    from graphos.renderers.gchart import LineChart
+    from graphos.renderers import flot
+    # from graphos.renderers.yui import LineChart
 
     r = requests.get('https://api.github.com/events')
     req = r.json()
@@ -60,6 +60,36 @@ def index(request):
             int(w['dt'])
         ).strftime('%Y-%m-%d %H:%M')
 
+    data = [['Date', 'Temp', 'Hum']]
+
+    for index, w in enumerate(weatherList):
+        fahr = w['main']['temp'] * 9/5 - 459.67
+        if (index % 8 == 0):
+            row = [w['dt'], fahr, w['main']['humidity']]
+            data.append(row)
+
+
+    # options = {
+    #     LineChart.series: {
+    #         0: {
+    #             targetAxisIndex: 0
+    #         },
+    #         1: {
+    #             targetAxisIndex: 1
+    #         }
+    #     },
+    #     vAxes: {
+    #         0: {
+    #             title: 'left'
+    #         },
+    #         1: {
+    #             title: 'right'
+    #         }
+    #     }
+    # }
+
+    chart = LineChart(SimpleDataSource(data=data))
+
 
     todos = Todo.objects.all()[:10]
     context = {
@@ -73,6 +103,7 @@ def index(request):
         # 'res': result,
 
     }
+
     return render(request, 'index.html', context)
     # return render(request, 'index.html', { 'output' : column2d.render()})
 
