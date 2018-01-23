@@ -7,5 +7,24 @@ class Todo(models.Model):
     test = models.TextField()
     created_at = models.DateTimeField(default=datetime.now, blank=True)
 
+class WeatherReal(models.Model):
+    timestamp = models.DateTimeField(default=datetime.now, blank=True)
+    temp = models.IntegerField(default=0)
+    humidity = models.IntegerField(default=0)
+    description = models.CharField(default='', max_length=50)
+    windspeed = models.IntegerField(default=0)
+    pressure = models.IntegerField(default=0)
+
+class WeatherPredict(models.Model):
+    timestamp = models.DateTimeField(default=datetime.now, blank=True)
+    temp = models.IntegerField(default=0)
+    humidity = models.IntegerField(default=0)
+    description = models.CharField(default='', max_length=50)
+    windspeed = models.IntegerField(default=0)
+    pressure = models.IntegerField(default=0)
+    temp_max = models.IntegerField(default=0)
+    temp_min = models.IntegerField(default=0)
+    predictionFor = models.CharField(default='', max_length=50)
+
 def __str__(self):
     return self.title
