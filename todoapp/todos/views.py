@@ -1,3 +1,4 @@
+
 from django.shortcuts import render
 
 # Create your views here.
@@ -6,21 +7,25 @@ from .models import Todo
 from .models import WeatherReal, WeatherPredict
 import requests
 import datetime
+# from django_cron import CronJobBase, Schedule
+
 # from .fusioncharts import FusionCharts
 
-# apikey = '2c35c72f5c9e3ae5e4c914715d470ab1'
 apikey = '24203607faa5b9ea5f063794f983e08d'
 
 def index(request):
     # import matplotlib.pyplot as plt
+
 
     from graphos.sources.simple import SimpleDataSource
     from graphos.renderers.gchart import LineChart
     # from graphos.renderers import flot
     # from graphos.renderers.yui import LineChart
 
-    r = requests.get('https://api.github.com/events')
-    req = r.json()
+
+
+    # r = requests.get('https://api.github.com/events')
+    # req = r.json()
     result = []
     #Right, dot notation won't work here:
     # for request in req:
@@ -60,19 +65,32 @@ def index(request):
         temp_max = w['main']['temp_max']
         description = w['weather'][0]['description']
 
-        # Save to the DB:
+        # Save to the DB (PredictedWeather table):
         w = WeatherPredict(predictionFor=predictionFor, description=description, temp=fahr, humidity=humidity, windspeed=wind, temp_max=temp_max, temp_min=temp_min, pressure=pressure)
-        w.save()
+        # w.save()
 
     chart = LineChart(SimpleDataSource(data=data))
 
     todos = Todo.objects.all()[:15]
 
+    currentWeather = weatherList[0]
+    today = currentWeather['dt']
+    fahr = currentWeather['main']['temp'] * 9/5 - 459.67
+    wind = currentWeather['wind']['speed'] * 5
+    hum = currentWeather['main']['humidity']
+    pressure = currentWeather['main']['pressure']
+    desc = currentWeather['weather'][0]['description']
+
+    # Save to RealWeather table:
+    w = WeatherReal(today=today, humidity=hum, temp=fahr, pressure=pressure, description=desc, windspeed=wind)
+    w.save()
+
     context = {
         'name': 'zack',
         'todos': todos,
-        'req': req,
+        # 'req': req,
         'weather': weatherList,
+        'today': weatherList[0],
         'chart': chart,
     }
 

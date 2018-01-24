@@ -9,6 +9,7 @@ class Todo(models.Model):
 
 class WeatherReal(models.Model):
     timestamp = models.DateTimeField(default=datetime.now, blank=True)
+    today = models.CharField(default='', max_length=50)
     temp = models.IntegerField(default=0)
     humidity = models.IntegerField(default=0)
     description = models.CharField(default='', max_length=50)
