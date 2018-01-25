@@ -16,8 +16,12 @@ class WeatherReal(models.Model):
     windspeed = models.IntegerField(default=0)
     pressure = models.IntegerField(default=0)
 
+    def __str__(self):
+        return self.today
+
 class WeatherPredict(models.Model):
     timestamp = models.DateTimeField(default=datetime.now, blank=True)
+    today = models.CharField(default='', max_length=50)
     temp = models.IntegerField(default=0)
     humidity = models.IntegerField(default=0)
     description = models.CharField(default='', max_length=50)
@@ -26,6 +30,9 @@ class WeatherPredict(models.Model):
     temp_max = models.IntegerField(default=0)
     temp_min = models.IntegerField(default=0)
     predictionFor = models.CharField(default='', max_length=50)
+
+    def __str__(self):
+        return self.predictionFor
 
 def __str__(self):
     return self.title
