@@ -6,27 +6,21 @@ from django.http import HttpResponse
 from .models import Todo
 from .models import WeatherReal, WeatherPredict
 import requests
-import datetime, sched
+import datetime, sched, schedule, time
+from graphos.sources.simple import SimpleDataSource
+from graphos.renderers.gchart import LineChart
+
 
 apikey = '24203607faa5b9ea5f063794f983e08d'
 
-def index(request):
-    from graphos.sources.simple import SimpleDataSource
-    from graphos.renderers.gchart import LineChart
-
-    allReal = WeatherReal.objects.filter()
-
-    result = []
-    #Right, dot notation won't work here:
-    # for request in req:
-    #     result.append(request.actor.avatar_url)
-
+def getWeather():
     weatherurl = 'http://api.openweathermap.org/data/2.5/forecast?q=%s&APPID=%s' % ('Minneapolis', apikey)
     # weatherurl = 'http://api.openweathermap.org/data/2.5/weather?q=%s&APPID=%s' % ('Minneapolis', apikey)
     # weatherurl = 'http://tile.openweathermap.org/map/%s/%s/%s/%s.png?appid=%s' % ('clouds_new', '1', '22', '33', apikey)
 
     weather = requests.get(weatherurl)
 
+    global weatherList
     weatherList = weather.json()['list']
 
     # Subtracting 21600 to try to account for 6 hour difference. It works, but the really weird thing is that our TIMESTAMP is 6 hours ahead!:
@@ -78,10 +72,24 @@ def index(request):
         # w = WeatherReal(today=predictionFor)
         # w.save()
 
+    global chart
     chart = LineChart(SimpleDataSource(data=data))
 
-    todos = Todo.objects.all()[:15]
 
+# def repeatedCall(scheduler, interval, action, args=()):
+#     scheduler.enter(interval, 1, repeatedCall, (scheduler, interval, action, args))
+#     action(*args)
+
+def index(request):
+    getWeather()
+    # schedule.every(10).seconds.do(getWeather)
+
+    # while True:
+    #     schedule.run_pending()
+    #     time.sleep(1)
+
+
+    todos = Todo.objects.all()[:15]
 
     context = {
         'name': 'zack',
@@ -90,7 +98,7 @@ def index(request):
         'weather': weatherList,
         'today': weatherList[0],
         'chart': chart,
-        'all': allReal,
+        # 'all': allReal,
     }
 
     return render(request, 'index.html', context)
