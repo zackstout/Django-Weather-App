@@ -1,14 +1,16 @@
 from django.db import models
 from datetime import datetime
+from django.utils import timezone
+
 
 # Create your models here.
 class Todo(models.Model):
     title = models.CharField(max_length=200)
     test = models.TextField()
-    created_at = models.DateTimeField(default=datetime.now, blank=True)
+    created_at = models.DateTimeField(default=timezone.now, blank=True)
 
 class WeatherReal(models.Model):
-    timestamp = models.DateTimeField(default=datetime.now, blank=True)
+    timestamp = models.DateTimeField(default=timezone.now, blank=True)
     today = models.CharField(default='', max_length=50)
     temp = models.IntegerField(default=0)
     humidity = models.IntegerField(default=0)
@@ -20,7 +22,7 @@ class WeatherReal(models.Model):
         return self.today
 
 class WeatherPredict(models.Model):
-    timestamp = models.DateTimeField(default=datetime.now, blank=True)
+    timestamp = models.DateTimeField(default=timezone.now, blank=True)
     today = models.CharField(default='', max_length=50)
     temp = models.IntegerField(default=0)
     humidity = models.IntegerField(default=0)

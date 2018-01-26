@@ -9,6 +9,7 @@ import requests, datetime, schedule, time
 from graphos.sources.simple import SimpleDataSource
 from graphos.renderers.gchart import LineChart
 
+
 apikey = '24203607faa5b9ea5f063794f983e08d'
 
 def getWeather():
@@ -20,7 +21,7 @@ def getWeather():
     global weatherList
     weatherList = weather.json()['list']
 
-    # Subtracting 21600 to try to account for 6 hour difference. It works, but the really weird thing is that our TIMESTAMP is 6 hours ahead!:
+    # Subtracting 21600 to try to account for 6 hour difference. It works, but the really weird thing is that our TIMESTAMP is 6 hours ahead! Ok using timezone now instead of datetime.:
     for w in weatherList:
         w['dt'] = datetime.datetime.fromtimestamp(
             int(w['dt'] - 21600)
@@ -38,8 +39,14 @@ def getWeather():
     desc = currentWeather['weather'][0]['description']
 
     # Update RealWeather table for today:
-    w = WeatherReal.objects.filter(today=today).update(humidity=hum, temp=fahr, pressure=pressure, description=desc, windspeed=wind)
-    # w.save()
+
+    try:
+        p = WeatherReal.objects.get(today=today)
+    except WeatherReal.DoesNotExist:
+        w = WeatherReal(today=today, humidity=hum, temp=fahr, pressure=pressure, description=desc, windspeed=wind)
+        w.save()
+    else:
+        w = WeatherReal.objects.filter(today=today).update(humidity=hum, temp=fahr, pressure=pressure, description=desc, windspeed=wind)
 
     # Predicted weather:
     for index, w in enumerate(weatherList[1::]):
@@ -74,18 +81,18 @@ def getWeather():
 
 def index(request):
     getWeather()
-    schedule.every().day.at("03:00").do(getWeather)
-    schedule.every().day.at("06:00").do(getWeather)
-    schedule.every().day.at("09:00").do(getWeather)
-    schedule.every().day.at("12:00").do(getWeather)
-    schedule.every().day.at("15:00").do(getWeather)
-    schedule.every().day.at("18:00").do(getWeather)
-    schedule.every().day.at("21:00").do(getWeather)
-    schedule.every().day.at("00:00").do(getWeather)
+    # schedule.every().day.at("03:00").do(getWeather)
+    # schedule.every().day.at("06:00").do(getWeather)
+    # schedule.every().day.at("09:00").do(getWeather)
+    # schedule.every().day.at("12:00").do(getWeather)
+    # schedule.every().day.at("15:00").do(getWeather)
+    # schedule.every().day.at("18:00").do(getWeather)
+    # schedule.every().day.at("21:00").do(getWeather)
+    # schedule.every().day.at("00:00").do(getWeather)
 
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
+    # while True:
+    #     schedule.run_pending()
+    #     time.sleep(1)
 
     todos = Todo.objects.all()[:15]
 
