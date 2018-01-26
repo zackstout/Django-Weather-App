@@ -3,19 +3,16 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.http import HttpResponse
-from .models import Todo
-from .models import WeatherReal, WeatherPredict
-import requests
-import datetime, sched, schedule, time
+from .models import Todo, WeatherReal, WeatherPredict
+# Note: had to pip install schedule
+import requests, datetime, schedule, time
 from graphos.sources.simple import SimpleDataSource
 from graphos.renderers.gchart import LineChart
-
 
 apikey = '24203607faa5b9ea5f063794f983e08d'
 
 def getWeather():
     weatherurl = 'http://api.openweathermap.org/data/2.5/forecast?q=%s&APPID=%s' % ('Minneapolis', apikey)
-    # weatherurl = 'http://api.openweathermap.org/data/2.5/weather?q=%s&APPID=%s' % ('Minneapolis', apikey)
     # weatherurl = 'http://tile.openweathermap.org/map/%s/%s/%s/%s.png?appid=%s' % ('clouds_new', '1', '22', '33', apikey)
 
     weather = requests.get(weatherurl)
@@ -30,7 +27,6 @@ def getWeather():
         ).strftime('%m-%d %H:%M')
 
     data = [['Date', 'Temp', 'Hum', 'Wind * 5']]
-
 
     # Current weather:
     currentWeather = weatherList[0]
@@ -76,18 +72,20 @@ def getWeather():
     chart = LineChart(SimpleDataSource(data=data))
 
 
-# def repeatedCall(scheduler, interval, action, args=()):
-#     scheduler.enter(interval, 1, repeatedCall, (scheduler, interval, action, args))
-#     action(*args)
-
 def index(request):
     getWeather()
-    # schedule.every(10).seconds.do(getWeather)
+    schedule.every().day.at("03:00").do(getWeather)
+    schedule.every().day.at("06:00").do(getWeather)
+    schedule.every().day.at("09:00").do(getWeather)
+    schedule.every().day.at("12:00").do(getWeather)
+    schedule.every().day.at("15:00").do(getWeather)
+    schedule.every().day.at("18:00").do(getWeather)
+    schedule.every().day.at("21:00").do(getWeather)
+    schedule.every().day.at("00:00").do(getWeather)
 
-    # while True:
-    #     schedule.run_pending()
-    #     time.sleep(1)
-
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
 
     todos = Todo.objects.all()[:15]
 
