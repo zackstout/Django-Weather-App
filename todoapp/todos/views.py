@@ -9,12 +9,46 @@ import requests, datetime, schedule, time
 from graphos.sources.simple import SimpleDataSource
 from graphos.renderers.gchart import LineChart
 
+# note: must re-pip3 install both.
+import pandas as pd
+from pandas_datareader import data as web
+
+
 
 apikey = '24203607faa5b9ea5f063794f983e08d'
+
+def getHistory():
+    # Nope, need to pay them to get this:
+    # now using www1.ncdc.noaa.gov
+    histurl = 'http://history.openweathermap.org/data/2.5/history/city?q=Minneapolis,840&type=hour&start=1369728000&end=1369789200'
+    hist = requests.get(histurl)
+
+    # print(hist)
+    global histList
+    histList = hist.json()
+
+
+
+def readHistory():
+    # Note: had to put csv in penultimate-root folder to get this work.
+    # Also had to fix csv: erase some commas among the headers.
+    # df = pd.read_csv('weather.csv')
+
+    # Ok cool just use 538 datasets (I forked and cloned their repo of csvs) from now on:
+    # They have twitter, weather history, bechdel, college majors, historical ncaa forecasts, love actually crossovers, murder counts by city....
+    
+    df = pd.read_csv('tarantino.csv')
+    global head
+    # df.set_index('TEMP', inplace=True)
+    head = df.head(3)
+    head = df['movie']
+
+
 
 def getWeather():
     weatherurl = 'http://api.openweathermap.org/data/2.5/forecast?q=%s&APPID=%s' % ('Minneapolis', apikey)
     # weatherurl = 'http://tile.openweathermap.org/map/%s/%s/%s/%s.png?appid=%s' % ('clouds_new', '1', '22', '33', apikey)
+
 
     weather = requests.get(weatherurl)
 
@@ -81,15 +115,19 @@ def getWeather():
 
 def index(request):
     getWeather()
-    # schedule.every().day.at("03:00").do(getWeather)
-    # schedule.every().day.at("06:00").do(getWeather)
-    # schedule.every().day.at("09:00").do(getWeather)
-    # schedule.every().day.at("12:00").do(getWeather)
-    # schedule.every().day.at("15:00").do(getWeather)
-    # schedule.every().day.at("18:00").do(getWeather)
-    # schedule.every().day.at("21:00").do(getWeather)
-    # schedule.every().day.at("00:00").do(getWeather)
-
+    readHistory()
+    # getHistory()
+    # schedule.every(1).minutes.do(getWeather)
+    #
+    # schedule.every().day.at("02:50").do(getWeather)
+    # schedule.every().day.at("05:50").do(getWeather)
+    # schedule.every().day.at("08:50").do(getWeather)
+    # schedule.every().day.at("11:50").do(getWeather)
+    # schedule.every().day.at("14:50").do(getWeather)
+    # schedule.every().day.at("17:50").do(getWeather)
+    # schedule.every().day.at("20:50").do(getWeather)
+    # schedule.every().day.at("23:50").do(getWeather)
+    #
     # while True:
     #     schedule.run_pending()
     #     time.sleep(1)
@@ -103,6 +141,7 @@ def index(request):
         'weather': weatherList,
         'today': weatherList[0],
         'chart': chart,
+        'hist': head,
         # 'all': allReal,
     }
 
