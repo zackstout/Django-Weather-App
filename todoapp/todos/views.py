@@ -36,7 +36,7 @@ def readHistory():
 
     # Ok cool just use 538 datasets (I forked and cloned their repo of csvs) from now on:
     # They have twitter, weather history, bechdel, college majors, historical ncaa forecasts, love actually crossovers, murder counts by city....
-    
+
     df = pd.read_csv('tarantino.csv')
     global head
     # df.set_index('TEMP', inplace=True)
@@ -88,7 +88,7 @@ def getWeather():
         wind = w['wind']['speed'] * 5
 
         # Add to row for chart:
-        if (index % 4 == 0):
+        if (index % 1 == 0):
             predictionFor = w['dt']
             humidity = w['main']['humidity']
             row = [predictionFor, fahr, humidity, wind]
