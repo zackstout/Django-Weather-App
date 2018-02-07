@@ -19,11 +19,26 @@
 
     </div> -->
 
+    <!-- wow, how picky, django needs a / on the end: -->
+    <form action="/todos/cityname/" method="post">
+      <!-- and we need this: -->
+      {% csrf_token %}
+      <label for="cityname">City: </label>
+      <input id="city_name" type="text" name="city_name" value="Minneapolis">
+      <input type="submit" value="Get it">
+    </form>
+
+    <br>
     {{chart.as_html}}
 
-Hello from {{name}}
 
-{{hist}}
+<!-- Hello from {{name}} -->
+<!-- {{hist}} -->
+
+
+
+
+
 
 <!-- <ul>
   {% for todo in todos %}

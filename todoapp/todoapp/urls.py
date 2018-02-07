@@ -20,6 +20,8 @@ from django.conf.urls import include, url
 urlpatterns = [
     url('admin/', admin.site.urls),
     url('todos/', include('todos.urls')),
+    # url('cityname/', include('cityname.urls')),
+
     url(r'^$', include('todos.urls')),
 
 ]

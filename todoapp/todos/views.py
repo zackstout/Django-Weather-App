@@ -2,7 +2,7 @@
 from django.shortcuts import render
 
 # Create your views here.
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from .models import Todo, WeatherReal, WeatherPredict
 # Note: had to pip install schedule
 import requests, datetime, schedule, time
@@ -12,6 +12,16 @@ from graphos.renderers.gchart import LineChart
 # note: must re-pip3 install both.
 import pandas as pd
 from pandas_datareader import data as web
+
+# from .forms import CityForm
+
+from django.template import RequestContext
+
+
+def get_city(request):
+    print('getting city', request)
+    # if this is a POST request we need to process the form data
+    return 'hi'
 
 
 
@@ -43,12 +53,9 @@ def readHistory():
     head = df.head(3)
     head = df['movie']
 
-
-
-def getWeather():
-    weatherurl = 'http://api.openweathermap.org/data/2.5/forecast?q=%s&APPID=%s' % ('Minneapolis', apikey)
+def getWeather(city):
+    weatherurl = 'http://api.openweathermap.org/data/2.5/forecast?q=%s&APPID=%s' % (city, apikey)
     # weatherurl = 'http://tile.openweathermap.org/map/%s/%s/%s/%s.png?appid=%s' % ('clouds_new', '1', '22', '33', apikey)
-
 
     weather = requests.get(weatherurl)
 
@@ -114,8 +121,9 @@ def getWeather():
 
 
 def index(request):
-    getWeather()
+    getWeather('Portland')
     readHistory()
+    # get_city(request)
     # getHistory()
     # schedule.every(1).minutes.do(getWeather)
     #
