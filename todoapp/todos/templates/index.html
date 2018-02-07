@@ -19,14 +19,16 @@
 
     </div> -->
 
+    <input id="city_name" type="text" name="city_name" value="Minneapolis">
+    <button onclick="">submit</button>
+
     <!-- wow, how picky, django needs a / on the end: -->
-    <form action="/todos/cityname/" method="post">
-      <!-- and we need this: -->
+    <!-- <form action="/todos/cityname/" method="post">
       {% csrf_token %}
       <label for="cityname">City: </label>
       <input id="city_name" type="text" name="city_name" value="Minneapolis">
       <input type="submit" value="Get it">
-    </form>
+    </form> -->
 
     <br>
     {{chart.as_html}}
@@ -34,6 +36,17 @@
 
 <!-- Hello from {{name}} -->
 <!-- {{hist}} -->
+
+
+Current time: {{current.today}} &emsp;
+Temperature: {{current.temp}}
+<br>
+Description: {{current.desc}} &emsp;
+Humidity: {{current.hum}}
+<br>
+Pressure: {{current.pressure}} &emsp;
+Wind: {{current.wind}}
+
 
 
 
@@ -44,9 +57,9 @@
   {% for todo in todos %}
     <li><a href="todos/details/{{todo.id}}">{{todo.title}}</a>: {{todo.test}}</li>
   {% endfor %}
-</ul>
+</ul> -->
 
-<p>{{all}}</p> -->
+<!-- <p>{{all}}</p> -->
 
 
 <!-- <ul>

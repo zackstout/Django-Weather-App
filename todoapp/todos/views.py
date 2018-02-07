@@ -70,6 +70,10 @@ def getWeather(city):
 
     data = [['Date', 'Temp', 'Hum', 'Wind * 5']]
 
+    global current
+    # Oh interesting, if we append to data, current also gets updated:
+    current = data
+
     # Current weather:
     currentWeather = weatherList[0]
     today = currentWeather['dt']
@@ -109,6 +113,16 @@ def getWeather(city):
         temp_max = w['main']['temp_max'] * 9/5 - 459.67
         description = w['weather'][0]['description']
 
+        # Interesting, toggles between low and high temp, apparently, with each call:
+        global nowData
+        nowData = {'today': '', 'temp': '', 'hum': '', 'pressure': '', 'wind': '', 'desc': ''}
+        nowData['today'] = today
+        nowData['temp'] = weatherList[0]['main']['temp'] * 9/5 - 459.67
+        nowData['hum'] = weatherList[0]['main']['humidity']
+        nowData['pressure'] = weatherList[0]['main']['pressure']
+        nowData['wind'] = weatherList[0]['wind']['speed']
+        nowData['desc'] = weatherList[0]['weather'][0]['description']
+
         # Save to the DB (PredictedWeather table):
         w = WeatherPredict(today=today, predictionFor=predictionFor, description=description, temp=fahr, humidity=humidity, windspeed=wind, temp_max=temp_max, temp_min=temp_min, pressure=pressure)
         w.save()
@@ -121,7 +135,7 @@ def getWeather(city):
 
 
 def index(request):
-    getWeather('Portland')
+    getWeather('Minneapolis')
     readHistory()
     # get_city(request)
     # getHistory()
@@ -150,6 +164,7 @@ def index(request):
         'today': weatherList[0],
         'chart': chart,
         'hist': head,
+        'current': nowData,
         # 'all': allReal,
     }
 
