@@ -113,7 +113,7 @@ def getWeather(city):
         temp_max = w['main']['temp_max'] * 9/5 - 459.67
         description = w['weather'][0]['description']
 
-        # Interesting, toggles between low and high temp, apparently, with each call:
+        # Interesting, toggles between low and high temp, apparently, with each call. And it does change pretty frequently:
         global nowData
         nowData = {'today': '', 'temp': '', 'hum': '', 'pressure': '', 'wind': '', 'desc': ''}
         nowData['today'] = today

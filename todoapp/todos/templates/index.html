@@ -3,8 +3,10 @@
   <head>
     <meta charset="utf-8">
     <script src="http://yui.yahooapis.com/3.10.0/build/yui/yui-min.js"></script>
+    <script src="static/jquery.js" charset="utf-8"></script>
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
+
       google.load("visualization", "1", {packages:["corechart"]});
     </script>
 
@@ -15,12 +17,21 @@
   </head>
   <body>
 
+    <script type="text/javascript">
+      $(document).ready(() => {
+        console.log('jq');
+        $('#subCity').on('click', () => {
+          console.log( $('#city_name').val() );
+        });
+      });
+    </script>
+
     <!-- <div id="chart1"> {{ output|safe }}
 
     </div> -->
 
     <input id="city_name" type="text" name="city_name" value="Minneapolis">
-    <button onclick="">submit</button>
+    <button id="subCity">submit</button>
 
     <!-- wow, how picky, django needs a / on the end: -->
     <!-- <form action="/todos/cityname/" method="post">
