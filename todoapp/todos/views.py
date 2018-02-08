@@ -38,16 +38,24 @@ def get_city(request):
 
 
 apikey = '24203607faa5b9ea5f063794f983e08d'
+apiUnderground = '4bcb3c76028e1c9c'
 
 def getHistory():
     # Nope, need to pay them to get this:
     # now using www1.ncdc.noaa.gov
-    histurl = 'http://history.openweathermap.org/data/2.5/history/city?q=Minneapolis,840&type=hour&start=1369728000&end=1369789200'
-    hist = requests.get(histurl)
+    # histurl = 'http://history.openweathermap.org/data/2.5/history/city?q=Minneapolis,840&type=hour&start=1369728000&end=1369789200'
+    # hist = requests.get(histurl)
+
+
+    url = 'http://api.wunderground.com/api/4bcb3c76028e1c9c/history_20100715/q/MN/Minneapolis.json'
+    global history
+    # history = requests.get(url).json()['history']['observations'][2]
+    history = requests.get(url).json()['history']['dailysummary']
+    print(history)
 
     # print(hist)
-    global histList
-    histList = hist.json()
+    # global histList
+    # histList = hist.json()
 
 
 
@@ -166,7 +174,7 @@ def index(request):
     getWeather(city, request)
     readHistory()
     # get_city(request)
-    # getHistory()
+    getHistory()
     # schedule.every(1).minutes.do(getWeather)
     #
     # schedule.every().day.at("02:50").do(getWeather)
@@ -191,9 +199,10 @@ def index(request):
         'weather': weatherList,
         'today': weatherList[0],
         'chart': chart,
-        'hist': head,
+        'hist': history,
         'current': nowData,
         # 'all': allReal,
+
     }
 
     return render(request, 'index.html', context)
