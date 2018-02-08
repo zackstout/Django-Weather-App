@@ -17,11 +17,23 @@ from pandas_datareader import data as web
 
 from django.template import RequestContext
 
+from django.views.decorators.csrf import csrf_exempt
+city = 'Minneapolis'
 
+
+@csrf_exempt
 def get_city(request):
-    print('getting city', request)
+    print(requests)
+    city = str(request.body)[2: len(str(request.body)) - 1]
+    print('getting city', str(request.body)[2: len(str(request.body)) - 1])
+
     # if this is a POST request we need to process the form data
-    return 'hi'
+    # return 'hi'
+    getWeather(city, request)
+    context = {
+        'city': request.body
+    }
+    return render(request, 'city.html')
 
 
 
@@ -53,7 +65,8 @@ def readHistory():
     head = df.head(3)
     head = df['movie']
 
-def getWeather(city):
+def getWeather(city, request):
+    print('getting weather, hoss')
     weatherurl = 'http://api.openweathermap.org/data/2.5/forecast?q=%s&APPID=%s' % (city, apikey)
     # weatherurl = 'http://tile.openweathermap.org/map/%s/%s/%s/%s.png?appid=%s' % ('clouds_new', '1', '22', '33', apikey)
 
@@ -133,9 +146,24 @@ def getWeather(city):
     global chart
     chart = LineChart(SimpleDataSource(data=data))
 
+    # context = {
+    #         'name': 'zack',
+    #         # 'todos': todos,
+    #         # 'req': req,
+    #         'weather': weatherList,
+    #         'today': weatherList[0],
+    #         'chart': chart,
+    #         # 'hist': head,
+    #         'current': nowData,
+    #         # 'all': allReal,
+    #     }
+    #
+    # return render(request, 'index.html', context)
+
 
 def index(request):
-    getWeather('Minneapolis')
+    print("CITY :", city)
+    getWeather(city, request)
     readHistory()
     # get_city(request)
     # getHistory()

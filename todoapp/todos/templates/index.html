@@ -16,12 +16,27 @@
     <title>Django Weather!</title>
   </head>
   <body>
+        {% csrf_token %}
 
     <script type="text/javascript">
       $(document).ready(() => {
         console.log('jq');
+
         $('#subCity').on('click', () => {
+          value = $('#city_name').val();
           console.log( $('#city_name').val() );
+
+          $.ajax({
+            url: '/todos/cityname/',
+            type: 'POST',
+            data: value,
+            success: function( data ){
+              console.log( data );
+            },
+            error: function( err ) {
+              console.log( err );
+            } // end success
+          }); //end ajax
         });
       });
     </script>
