@@ -76,7 +76,14 @@ Wind: {{current.wind}}
 
 
 <br>
-{{hist}}
+<!-- {{hist}} -->
+
+<ul>
+  {% for h in hist %}
+  <li>{{h}}</li>
+  {% endfor %}
+</ul>
+
 
 
 <!-- <ul>
