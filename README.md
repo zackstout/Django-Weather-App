@@ -10,6 +10,11 @@ The idea for this app is to measure how well the OpenWeatherMap API forecasts th
 - Django Graphos
 - Open Weather Map API
 
+<!-- nice, breaks don't matter -->
+
+## Screenshot:
+5-day forecast:
+![chart](https://user-images.githubusercontent.com/29472568/36504058-d6a88784-1714-11e8-8068-71b7551bd2b2.png)
 
 
 ## Stretch Goals:
@@ -19,3 +24,4 @@ The idea for this app is to measure how well the OpenWeatherMap API forecasts th
 - Seek trends in historical data, over say the last forty years (probably will get best results by choosing a single day, or month averaged out);
 - Let user input which city to view;
 - Could weight 5-day predictions lower than 1-day predictions in order to determine overall success rate of the predictor function.
+- Tides data
